@@ -3,29 +3,22 @@ require 'pp'
 require 'pry'
 require 'set'
 
-INPUT = File.read('day1.input').chomp
-# or
-INPUT = File.readlines('day1.input').map(&:chomp)
-
-# require './lib/grid'
-# grid = Grid.new(:reversed OR :cartesian)
-# grid.fill(width, height, INPUT.flat_map { |l| l.split('') })
-# grid.bearing(pt1, pt2)
-# grid.distance(pt1, pt2)
-
-# require './lib/graph_utils'
-# GraphUtils.topo_sort([[dependency, dependent], ...])
+INPUT = File.readlines('day1.input').map(&:chomp).map(&:to_i)
 
 # Part 1
 
-result_1 = nil
+result_1 = INPUT
+  .combination(2)
+  .find { _1 + _2 == 2020 }
+  .reduce(:*)
 
-puts result_1
+puts result_1 # 806656
 
 # Part 2
 
-result_2 = nil
+result_2 = INPUT
+  .combination(3)
+  .find { _1.reduce(:+) == 2020 }
+  .reduce(:*)
 
-puts result_2
-
-binding.pry
+puts result_2 # 230608320
