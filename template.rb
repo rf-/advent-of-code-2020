@@ -8,8 +8,8 @@ INPUT = File.read('dayN.input').chomp
 INPUT = File.readlines('dayN.input').map(&:chomp)
 
 # require './lib/grid'
-# grid = Grid.new(:reversed OR :cartesian)
-# grid.fill(width, height, INPUT.flat_map { |l| l.split('') })
+# grid = Grid.new(:y_down OR :y_up)
+# grid.fill(INPUT[0].length, INPUT.length, INPUT.flat_map { |l| l.split('') })
 # grid.bearing(pt1, pt2)
 # grid.distance(pt1, pt2)
 
