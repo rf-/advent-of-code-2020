@@ -28,4 +28,4 @@ result_2 = nil
 
 puts result_2
 
-binding.pry
+Pry.start(binding, quiet: true)

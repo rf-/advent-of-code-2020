@@ -5,9 +5,7 @@ require 'set'
 
 INPUT = File.read('day4.input').chomp
 
-passports = INPUT.split(/\n\n/).map do |stuff|
-  stuff.scan(/(\w{3}):(.*?)(?: |\n|$)/).to_h
-end
+passports = INPUT.split(/\n\n/).map { _1.scan(/(\w+):(\S+)/).to_h }
 
 # Part 1
 
