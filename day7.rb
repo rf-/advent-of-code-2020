@@ -21,7 +21,7 @@ end
 
 # Part 1
 
-def count_containing_colors(rules_inverted, initial_color)
+count_containing_colors = -> (initial_color) do
   seen = Set.new
   pending = Set.new([initial_color])
 
@@ -38,20 +38,20 @@ def count_containing_colors(rules_inverted, initial_color)
   seen.count - 1 # remove original color
 end
 
-result_1 = count_containing_colors(rules_inverted, 'shiny gold')
+result_1 = count_containing_colors.('shiny gold')
 
 puts result_1 # 316
 
 # Part 2
 
-def count_contained_bags(rules, color)
+count_contained_bags = -> (color) do
   return 0 if rules[color].nil?
 
   rules[color].sum do |count, contained_color|
-    (1 + count_contained_bags(rules, contained_color)) * count
+    (1 + count_contained_bags.(contained_color)) * count
   end
 end
 
-result_2 = count_contained_bags(rules, 'shiny gold')
+result_2 = count_contained_bags.('shiny gold')
 
 puts result_2 # 11310
