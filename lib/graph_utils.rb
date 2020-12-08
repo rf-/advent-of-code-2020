@@ -12,8 +12,7 @@ module GraphUtils
 
     leaves = Set.new(graph.keys - graph.values.flatten)
     while leaves.any?
-      leaf = leaves.to_a[0]
-      leaves.delete(leaf)
+      leaf = leaves.pop
       result << leaf
       leaves.merge((graph.delete(leaf) || []) - graph.values.flatten)
     end

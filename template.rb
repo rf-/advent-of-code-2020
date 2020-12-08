@@ -2,6 +2,7 @@ require 'active_support/all'
 require 'pp'
 require 'pry'
 require 'set'
+require './lib/extensions'
 
 INPUT = File.read('dayN.input').strip
 # or
