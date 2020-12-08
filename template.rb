@@ -3,9 +3,9 @@ require 'pp'
 require 'pry'
 require 'set'
 
-INPUT = File.read('dayN.input').chomp
+INPUT = File.read('dayN.input').strip
 # or
-INPUT = File.readlines('dayN.input').map(&:chomp)
+INPUT = File.read('dayN.input').strip.lines.map(&:chomp)
 
 # Part 1
 
