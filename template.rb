@@ -4,9 +4,11 @@ require 'pry'
 require 'set'
 require './lib/extensions'
 
-INPUT = File.read('dayN.input').strip
+example_input = nil
+
+input = (example_input || File.read('dayN.input')).strip
 # or
-INPUT = File.read('dayN.input').strip.lines.map(&:chomp)
+input = (example_input || File.read('dayN.input')).strip.lines.map(&:chomp)
 
 # Part 1
 
