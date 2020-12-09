@@ -5,6 +5,8 @@ require 'set'
 require './lib/extensions'
 
 example_input = nil
+#example_input = <<EOS
+#EOS
 
 input = (example_input || File.read('dayN.input')).strip
 # or
