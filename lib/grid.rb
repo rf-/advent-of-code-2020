@@ -20,6 +20,21 @@ class Grid
     dir.define_singleton_method(:turn_left) { DIRECTIONS[(idx + 3) % 4] }
   end
 
+  ORTHOGONAL_NEIGHBORS = [
+    [-1, 0],
+    [0, -1],
+    [1, 0],
+    [0, 1],
+  ]
+
+  DIAGONAL_NEIGHBORS = []
+  (-1..1).each do |x|
+    (-1..1).each do |y|
+      next if x == 0 && y == 0
+      DIAGONAL_NEIGHBORS.push([x, y])
+    end
+  end
+
   attr_accessor :grid, :default, :mode
   protected :grid=
 
@@ -37,6 +52,10 @@ class Grid
     @system = system
     @default = default
     @mode = mode
+  end
+
+  def ==(other)
+    @grid == other.grid
   end
 
   def keys
@@ -61,7 +80,7 @@ class Grid
 
   def dup
     Grid.new(@system, default: @default, mode: @mode).tap do |new_grid|
-      new_grid.grid = @grid
+      new_grid.grid = @grid.dup
     end
   end
 
@@ -77,22 +96,20 @@ class Grid
     end
   end
 
-  def each_neighbor(x, y)
-    if @mode == :orthogonal
-      [
-        [x, y - 1],
-        [x - 1, y],
-        [x + 1, y],
-        [x, y + 1],
-      ].each do |coords|
-        yield self[*coords], coords
-      end
-    elsif @mode == :diagonal
-      (y - 1..y + 1).each do |yy|
-        (x - 1..x + 1).each do |xx|
-          next if xx == x && yy == y
-          yield self[xx, yy], [xx, yy]
-        end
+  def neighbors(x, y)
+    deltas = @mode == :orthogonal ? ORTHOGONAL_NEIGHBORS : DIAGONAL_NEIGHBORS
+    deltas.map do |dx, dy|
+      self[x + dx, y + dy]
+    end
+  end
+
+  def visible_neighbors(x, y, &test_opaque)
+    deltas = @mode == :orthogonal ? ORTHOGONAL_NEIGHBORS : DIAGONAL_NEIGHBORS
+    deltas.map do |dx, dy|
+      xx, yy = x + dx, y + dy
+      while (next_value = self[xx, yy])
+        break next_value if test_opaque.(next_value)
+        xx, yy = xx + dx, yy + dy
       end
     end
   end
