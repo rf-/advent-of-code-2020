@@ -1,7 +1,4 @@
-require 'active_support/all'
-require 'pp'
-require 'pry'
-require 'set'
+require './shared'
 
 INPUT = File.readlines('day5.input').map(&:chomp)
 

@@ -1,8 +1,4 @@
-require 'active_support/all'
-require 'pp'
-require 'pry'
-require 'set'
-require './lib/extensions'
+require './shared'
 
 adapters = File.read('day10.input').strip.lines.map(&:to_i).sort
 

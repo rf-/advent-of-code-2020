@@ -1,8 +1,4 @@
-require 'active_support/all'
-require 'pp'
-require 'pry'
-require 'set'
-require './lib/extensions'
+require './shared'
 
 INPUT = File.read('day8.input').strip.lines.map(&:chomp)
 

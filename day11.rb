@@ -1,9 +1,4 @@
-require 'active_support/all'
-require 'pp'
-require 'pry'
-require 'set'
-require './lib/extensions'
-require './lib/grid'
+require './shared'
 
 input = File.read('day11.input').strip.lines.map(&:chomp)
 grid = Grid.new

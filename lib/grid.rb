@@ -1,25 +1,6 @@
 require 'set'
 
 class Grid
-  class Direction < Module
-    def ===(other)
-      self == other
-    end
-  end
-
-  UP = Direction.new
-  RIGHT = Direction.new
-  DOWN = Direction.new
-  LEFT = Direction.new
-
-  DIRECTIONS = [UP, RIGHT, DOWN, LEFT]
-
-  DIRECTIONS.each_with_index do |dir, idx|
-    dir.define_singleton_method(:turn_right) { DIRECTIONS[(idx + 1) % 4] }
-    dir.define_singleton_method(:reverse) { DIRECTIONS[(idx + 2) % 4] }
-    dir.define_singleton_method(:turn_left) { DIRECTIONS[(idx + 3) % 4] }
-  end
-
   ORTHOGONAL_NEIGHBORS = [
     [-1, 0],
     [0, -1],
@@ -52,6 +33,10 @@ class Grid
     @system = system
     @default = default
     @mode = mode
+  end
+
+  def point_ops
+    @point_ops ||= PointOps[@system]
   end
 
   def ==(other)
@@ -133,29 +118,6 @@ class Grid
     end
   end
 
-  def move(dir, from, distance = 1)
-    x, y = from
-
-    if @system == :y_down
-      if dir == UP
-        dir = DOWN
-      elsif dir == DOWN
-        dir = UP
-      end
-    end
-
-    case dir
-    when UP
-      [x, y + distance]
-    when DOWN
-      [x, y - distance]
-    when LEFT
-      [x - distance, y]
-    when RIGHT
-      [x + distance, y]
-    end
-  end
-
   def fill(width, height, values)
     rows = values.each_slice(width).to_a
     rows = rows.reverse if @system == :y_up
@@ -193,24 +155,6 @@ class Grid
       .to_arrays
       .map { |r| r.join("") }
       .join("\n")
-  end
-
-  def bearing(from_coords, to_coords)
-    angle_rads = Math.atan2(
-      to_coords[1] - from_coords[1],
-      to_coords[0] - from_coords[0]
-    )
-    angle_degs = (angle_rads / (2 * Math::PI)) * 360
-    bearing_degs = (450 - angle_degs) % 360
-    bearing_degs = (540 - bearing_degs) % 360 if @system == :y_down
-    bearing_degs
-  end
-
-  def distance(from_coords, to_coords)
-    Math.sqrt(
-      ((to_coords[1] - from_coords[1]) ** 2) +
-      ((to_coords[0] - from_coords[0]) ** 2)
-    )
   end
 
   private

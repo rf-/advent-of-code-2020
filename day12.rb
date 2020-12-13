@@ -1,9 +1,7 @@
-require 'active_support/all'
-require 'pp'
-require 'pry'
-require 'set'
-require './lib/extensions'
-require './lib/grid'
+require './shared'
+
+include PointOps[:y_up]
+using PointOps[:y_up]
 
 instructions = File.read('day12.input').strip.lines.map do
   _1 =~ /^(\w)(\d+)$/ && [$1, $2.to_i]
@@ -11,29 +9,28 @@ end
 
 # Part 1
 
-grid = Grid.new(:y_up)
 pos = [0, 0]
-direction = Grid::RIGHT
+direction = RIGHT
 instructions.each do |action, value|
   case action
   when 'N'
-    pos = grid.move(Grid::UP, pos, value)
+    pos = pos.plus(UP.times(value))
   when 'S'
-    pos = grid.move(Grid::DOWN, pos, value)
+    pos = pos.plus(DOWN.times(value))
   when 'E'
-    pos = grid.move(Grid::RIGHT, pos, value)
+    pos = pos.plus(RIGHT.times(value))
   when 'W'
-    pos = grid.move(Grid::LEFT, pos, value)
+    pos = pos.plus(LEFT.times(value))
   when 'L'
-    (value / 90).times { direction = direction.turn_left }
+    (value / 90).times { direction = direction.rotate_left }
   when 'R'
-    (value / 90).times { direction = direction.turn_right }
+    (value / 90).times { direction = direction.rotate_right }
   when 'F'
-    pos = grid.move(direction, pos, value)
+    pos = pos.plus(direction.times(value))
   end
 end
 
-result_1 = pos.map(&:abs).sum
+result_1 = pos.taxicab_distance
 
 puts result_1 # 923
 
@@ -45,28 +42,22 @@ waypoint = [10, 1]
 instructions.each do |action, value|
   case action
   when 'N'
-    waypoint = grid.move(Grid::UP, waypoint, value)
+    waypoint = waypoint.plus(UP.times(value))
   when 'S'
-    waypoint = grid.move(Grid::DOWN, waypoint, value)
+    waypoint = waypoint.plus(DOWN.times(value))
   when 'E'
-    waypoint = grid.move(Grid::RIGHT, waypoint, value)
+    waypoint = waypoint.plus(RIGHT.times(value))
   when 'W'
-    waypoint = grid.move(Grid::LEFT, waypoint, value)
+    waypoint = waypoint.plus(LEFT.times(value))
   when 'L'
-    (value / 90).times do
-      waypoint = [-waypoint[1], waypoint[0]]
-    end
+    (value / 90).times { waypoint = waypoint.rotate_left }
   when 'R'
-    (value / 90).times do
-      waypoint = [waypoint[1], -waypoint[0]]
-    end
+    (value / 90).times { waypoint = waypoint.rotate_right }
   when 'F'
-    value.times do
-      pos = [pos[0] + waypoint[0], pos[1] + waypoint[1]]
-    end
+    pos = pos.plus(waypoint.times(value))
   end
 end
 
-result_2 = pos.map(&:abs).sum
+result_2 = pos.taxicab_distance
 
 puts result_2 # 24769

@@ -1,11 +1,7 @@
-require 'active_support/all'
-require 'pp'
-require 'pry'
-require 'set'
+require './shared'
 
 INPUT = File.readlines('day3.input').map(&:chomp)
 
-require './lib/grid'
 grid = Grid.new(:y_down)
 grid.fill(INPUT[0].length, INPUT.length, INPUT.flat_map { |l| l.split('') })
 

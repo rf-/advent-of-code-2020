@@ -1,7 +1,4 @@
-require 'active_support/all'
-require 'pp'
-require 'pry'
-require 'set'
+require './shared'
 
 INPUT = File.read('day4.input').chomp
 
