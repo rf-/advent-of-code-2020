@@ -133,7 +133,7 @@ class Grid
     end
   end
 
-  def move(dir, from)
+  def move(dir, from, distance = 1)
     x, y = from
 
     if @system == :y_down
@@ -146,13 +146,13 @@ class Grid
 
     case dir
     when UP
-      [x, y + 1]
+      [x, y + distance]
     when DOWN
-      [x, y - 1]
+      [x, y - distance]
     when LEFT
-      [x - 1, y]
+      [x - distance, y]
     when RIGHT
-      [x + 1, y]
+      [x + distance, y]
     end
   end
 
