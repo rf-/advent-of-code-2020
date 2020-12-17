@@ -10,7 +10,6 @@ input = (example_input || File.read('dayN.input')).strip.lines.map(&:chomp)
 
 Pry.start(binding, quiet: true)
 
-# require './lib/grid'
 # grid = Grid.new(:y_down OR :y_up)
 # include grid.point_ops
 # using grid.point_ops
