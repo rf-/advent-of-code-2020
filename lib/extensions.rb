@@ -2,6 +2,7 @@ require 'set'
 
 class Set
   def pop
+    return if @hash.empty?
     value = @hash.each { |key, value| break key }
     @hash.delete(value)
     value
@@ -21,5 +22,19 @@ class Array
       end
       result
     end
+  end
+end
+
+module Enumerable
+  # Via https://gist.github.com/havenwood/27a5850b99bb35f855b079038664b120
+  def find_map
+    return enum_for __method__ unless block_given?
+
+    each do |item|
+      found = yield item
+      return found if found
+    end
+
+    nil
   end
 end
