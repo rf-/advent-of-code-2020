@@ -2,44 +2,35 @@ require './shared'
 
 input = File.read('day17.input').strip.lines.map(&:chomp)
 
-# Part 1
-
-neighbors3 =
-  (-1..1).flat_map do |dx|
-    (-1..1).flat_map do |dy|
-      (-1..1).flat_map do |dz|
-        dx == 0 && dy == 0 && dz == 0 ? [] : [[dx, dy, dz]]
-      end
+neighbors = -> (coords) do
+  result = [[]]
+  coords.each do |coord|
+    result = result.flat_map do |entry|
+      (-1..1).map { |delta| [*entry, coord + delta] }
     end
   end
+  result - [coords]
+end
 
-step3 = -> (grid) do
+step = -> (grid) do
+  possible_cells = Set.new
+  grid.each do |coords|
+    possible_cells.merge(neighbors.(coords))
+  end
+
   new_grid = Set.new
-
-  xs, ys, zs = grid.to_a.then { |cs| cs[0].zip(*cs[1..]) }
-  x_range = xs.min - 1 .. xs.max + 1
-  y_range = ys.min - 1 .. ys.max + 1
-  z_range = zs.min - 1 .. zs.max + 1
-  x_range.each do |x|
-    y_range.each do |y|
-      z_range.each do |z|
-        active = grid.include?([x, y, z])
-        neighbors = neighbors3.count do |dx, dy, dz|
-          grid.include?([x + dx, y + dy, z + dz])
-        end
-
-        if (
-          (active && (neighbors == 2 || neighbors == 3)) ||
-          (!active && neighbors == 3)
-        )
-          new_grid.add([x, y, z])
-        end
-      end
+  possible_cells.each do |coords|
+    active = grid.include?(coords)
+    count = neighbors.(coords).count { |neighbor| grid.include?(neighbor) }
+    if active ? (2..3).cover?(count) : count == 3
+      new_grid.add(coords)
     end
   end
 
   new_grid
 end
+
+# Part 1
 
 grid3 = Set.new
 input.each_with_index do |line, y|
@@ -48,54 +39,12 @@ input.each_with_index do |line, y|
   end
 end
 
-6.times { grid3 = step3.(grid3) }
+6.times { grid3 = step.(grid3) }
 result_1 = grid3.size
 
 puts result_1 # 269
 
 # Part 2
-
-neighbors4 =
-  (-1..1).flat_map do |dx|
-    (-1..1).flat_map do |dy|
-      (-1..1).flat_map do |dz|
-        (-1..1).flat_map do |dw|
-          dx == 0 && dy == 0 && dz == 0 && dw == 0 ? [] : [[dx, dy, dz, dw]]
-        end
-      end
-    end
-  end
-
-step4 = -> (grid) do
-  new_grid = Set.new
-
-  xs, ys, zs, ws = grid.to_a.then { |cs| cs[0].zip(*cs[1..]) }
-  x_range = xs.min - 1 .. xs.max + 1
-  y_range = ys.min - 1 .. ys.max + 1
-  z_range = zs.min - 1 .. zs.max + 1
-  w_range = ws.min - 1 .. ws.max + 1
-  x_range.each do |x|
-    y_range.each do |y|
-      z_range.each do |z|
-        w_range.each do |w|
-          active = grid.include?([x, y, z, w])
-          neighbors = neighbors4.count do |dx, dy, dz, dw|
-            grid.include?([x + dx, y + dy, z + dz, w + dw])
-          end
-
-          if (
-            (active && (neighbors == 2 || neighbors == 3)) ||
-            (!active && neighbors == 3)
-          )
-            new_grid.add([x, y, z, w])
-          end
-        end
-      end
-    end
-  end
-
-  new_grid
-end
 
 grid4 = Set.new
 input.each_with_index do |line, y|
@@ -104,7 +53,7 @@ input.each_with_index do |line, y|
   end
 end
 
-6.times { grid4 = step4.(grid4) }
+6.times { grid4 = step.(grid4) }
 result_2 = grid4.size
 
 puts result_2 # 1380
