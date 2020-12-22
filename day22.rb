@@ -7,8 +7,9 @@ game = -> (hands, recurse:) do
   seen_configurations = [].to_set
 
   while hands[0].length > 0 && hands[1].length > 0
-    return 0 if seen_configurations.include?(hands)
-    seen_configurations.add(hands.deep_dup)
+    hash = hands.hash
+    return 0 if seen_configurations.include?(hash)
+    seen_configurations.add(hash)
 
     cards = hands.map(&:shift)
     winner =
