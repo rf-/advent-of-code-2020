@@ -38,3 +38,26 @@ module Enumerable
     nil
   end
 end
+
+class Proc
+  def memoize
+    cache = {}
+    old_call = method(:call)
+
+    singleton_class.define_method :call do |*args, **kwargs|
+      if cache.key?([args, kwargs])
+        cache[[args, kwargs]]
+      else
+        value = old_call.call(*args, **kwargs)
+        cache[[args, kwargs]] = value
+        value
+      end
+    end
+
+    singleton_class.define_method :clear do
+      cache = {}
+    end
+
+    self
+  end
+end
