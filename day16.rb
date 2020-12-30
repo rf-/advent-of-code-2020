@@ -44,7 +44,7 @@ end
 
 resolved_indices = Set.new
 while (
-  resolvable_index = possible_def_indices.find_map.with_index do |indices|
+  resolvable_index = possible_def_indices.find_map do |indices|
     indices[0] if indices.length == 1 && !resolved_indices.include?(indices[0])
   end
 )
