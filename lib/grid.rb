@@ -81,6 +81,15 @@ class Grid
     end
   end
 
+  def transform_keys(&block)
+    dup.tap do |new_grid|
+      new_grid.grid = {}
+      @grid.each do |k, v|
+        new_grid.grid[block.call(k, v)] = v
+      end
+    end
+  end
+
   def neighbors(x, y)
     deltas = @mode == :orthogonal ? ORTHOGONAL_NEIGHBORS : DIAGONAL_NEIGHBORS
     deltas.map do |dx, dy|
